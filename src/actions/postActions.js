@@ -1,16 +1,38 @@
 import { FETCH_POSTS, NEW_POST } from "./types";
+import _ from "lodash";
 
 export const fetchPosts = newItem => dispatch => {
-  console.log(JSON.stringify(newItem));
+  console.log(JSON.stringify("newItem: " + JSON.stringify(newItem)));
   fetch("https://jsonplaceholder.typicode.com/posts?_limit=10")
     .then(res => res.json())
-    .then(posts =>
+    .then(posts => {
+      if (!_.isEmpty(newItem)) {
+        console.log("adding new item: " + JSON.stringify(newItem));
+        posts.unshift(newItem);
+      }
+      return posts;
+    })
+    .then(allPosts => {
+      console.log("allPosts" + JSON.stringify(allPosts));
       dispatch({
         type: FETCH_POSTS,
-        payload: newItem.lenght === 0 ? posts : [...posts, newItem]
-      })
-    );
+        payload: allPosts
+      });
+    });
 };
+
+// export const fetchPosts = newItem => dispatch => {
+//   console.log(JSON.stringify(newItem));
+//   fetch("https://jsonplaceholder.typicode.com/posts?_limit=10")
+//     .then(res => res.json())
+//     .then(posts => {
+//       dispatch({
+//         type: FETCH_POSTS,
+//         payload: newItem.lenght === 0 ? posts : [...posts, newItem]
+//       });
+//       console.log("posts: " + JSON.stringify(posts));
+//     });
+// };
 
 export const createPost = postData => dispatch => {
   fetch("https://jsonplaceholder.typicode.com/posts", {

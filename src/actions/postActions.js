@@ -1,12 +1,13 @@
 import { FETCH_POSTS, NEW_POST } from "./types";
 
-export const fetchPosts = () => dispatch => {
+export const fetchPosts = newItem => dispatch => {
+  console.log(JSON.stringify(newItem));
   fetch("https://jsonplaceholder.typicode.com/posts?_limit=10")
     .then(res => res.json())
     .then(posts =>
       dispatch({
         type: FETCH_POSTS,
-        payload: posts
+        payload: newItem.lenght === 0 ? posts : [...posts, newItem]
       })
     );
 };
